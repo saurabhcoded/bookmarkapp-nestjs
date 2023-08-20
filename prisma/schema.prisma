@@ -10,16 +10,22 @@ datasource db {
 }
 
 model User {
-  id        Int        @id @default(autoincrement())
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  firstName String?    @db.VarChar(100)
-  lastName  String?    @db.VarChar(100)
-  userName  String?    @unique @db.VarChar(200)
-  email     String     @unique @db.VarChar(300)
-  contact   String     @db.VarChar(200)
-  hash      String     @db.Text
-  Bookmarks Bookmark[]
+  id                   Int         @id @default(autoincrement())
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @updatedAt
+  firstName            String?     @db.VarChar(100)
+  lastName             String?     @db.VarChar(100)
+  profile              String?     @db.Text
+  description          String?     @db.Text
+  userName             String?     @unique @db.VarChar(200)
+  email                String      @unique @db.VarChar(300)
+  contact              String?     @db.VarChar(200)
+  hash                 String?     @db.Text
+  logintype            LoginOption @default(JWT)
+  jwt_access_token     String?     @db.Text
+  google_access_token  String?     @db.Text
+  google_refresh_token String?     @db.Text
+  Bookmarks            Bookmark[]
 
   @@map("users")
 }
@@ -33,5 +39,10 @@ model Bookmark {
   description String?
   link        String?
   userId      Int
-  user        User     @relation(fields: [userId], references: [id])
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum LoginOption {
+  JWT
+  GOOGLE
 }
